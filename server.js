@@ -115,8 +115,5 @@ const requestListener = (req, res) => { //去接請求和回應
 
 // createServer 希望帶入函式監聽 requestListener 進去，所以上面要補一個函式來接收這個監聽。這個監聽是當今天有使用者造訪網頁(事件)，就會被監聽，看是否有觸發要執行的函式 
 const server = http.createServer(requestListener);
-server.listen(3005); // (先在終端機打上 node server.js) 網頁上輸入 http://127.0.0.1:3005 就會觸發監聽事件，執行 requestListener 裡面的程式碼而顯示 hello 文字在網頁上
-
-
-"// test" 
-"// test" 
+server.listen(process.env.PORT || 3005); // (先在終端機打上 node server.js) 網頁上輸入 http://127.0.0.1:3005 就會觸發監聽事件，執行 requestListener 裡面的程式碼而顯示 hello 文字在網頁上
+// process.env.PORT 是給雲端平台使用的埠號 (port)，本地端沒有這個東西，所以用 || 來設定本地端的預設埠號是 3005
