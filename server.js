@@ -1,5 +1,6 @@
 const http = require('http');
 const { v4: uuidv4 } = require('uuid');
+const errHandle = require('./errorHandle');
 const todos = [];
 
 // 監聽：要去接收下面函式的資料
@@ -9,23 +10,12 @@ const requestListener = (req, res) => { //去接請求和回應
         'Access-Control-Allow-Origin': '*', // 允許跨網域請求：允許所有網域的請求，讓其他伺服器/IP 都可以造訪
         'Access-Control-Allow-Methods': 'PATCH, POST, GET, OPTIONS, DELETE', // 允許的請求方法
         'Content-Type': 'application/json' // 用 json 格式解析 (接請求和回應)
-        // "Content-Type": "text/plain" // 用文字格式來接請求和回應
     }
 
     let body = "";
     req.on('data', chunk => {
         body += chunk;
     })
-
-    function errHandle(res) {
-        res.writeHead(400, headers);
-        res.write(JSON.stringify({
-            "status": "false",
-            "message": "欄位未填寫正確，或無此 todo id",
-        }));
-        res.end();
-    }
-
 
     if (req.url == "/todos" && req.method == "GET") { // 偵測首頁
         res.writeHead(200, headers);
@@ -128,3 +118,5 @@ const server = http.createServer(requestListener);
 server.listen(3005); // (先在終端機打上 node server.js) 網頁上輸入 http://127.0.0.1:3005 就會觸發監聽事件，執行 requestListener 裡面的程式碼而顯示 hello 文字在網頁上
 
 
+"// test" 
+"// test" 
