@@ -1,0 +1,268 @@
+# Ariel Todolist - MVP 版本 (本地端)
+
+一個前後端分離的待辦事項管理網頁（MVP），展示基礎的 REST API 與前端互動。
+
+後端為跟隨線上課程實作，並於 Notion 撰寫學習筆記；前端透過 GitHub Copilot Chat 協作。此份專案以學習為目的。
+
+## 📋 專案結構
+
+```
+project_todolist/
+├── todolist_backend/          # 後端（Node.js HTTP 伺服器）
+│   ├── server.js              # RESTful API 伺服器
+│   ├── errorHandle.js         # 錯誤處理模組
+│   ├── package.json           # 依賴配置
+│   └── node_modules/          # 已安裝依賴
+│
+├── todolist_frontend/         # 前端（靜態 HTML/CSS/JS）
+│   ├── index.html             # 頁面結構
+│   ├── all.js                 # 核心邏輯（API 呼叫、事件處理、DOM 渲染）
+│   ├── style.css              # 樣式表
+│   └── (image/assets 可選)
+│
+└── README.md                  # 本檔案
+```
+
+---
+
+## 🎯 目前功能（MVP）
+
+### 前端功能
+- ✅ **查看待辦清單** - 頁面載入時從後端取得所有待辦事項
+- ✅ **新增待辦** - 輸入標題後點擊「新增」按鈕發送 POST 請求
+- ✅ **編輯待辦** - 點擊每項的「編輯」按鈕彈窗修改標題（PATCH 請求）
+- ✅ **刪除單項** - 點擊「刪除」按鈕移除指定待辦（DELETE 請求）
+- ✅ **清除全部** - 點擊「清除全部」按鈕清空所有待辦（DELETE 請求）
+- ✅ **即時回饋** - 操作完成後顯示成功/失敗狀態
+
+### 後端 API 端點
+所有端點基於 `http://localhost:3005`（本地）
+
+| 方法 | 路由 | 功能 | 請求體 | 回應例 |
+|------|------|------|--------|-------|
+| GET | `/todos` | 取得所有待辦 | 無 | `{ status: "success", data: [{id, title}, ...] }` |
+| POST | `/todos` | 新增待辦 | `{ title: "..." }` | `{ status: "success", data: [...] }` |
+| PATCH | `/todos/:id` | 更新待辦 | `{ title: "..." }` | `{ status: "success", data: [...] }` |
+| DELETE | `/todos/:id` | 刪除單項 | 無 | `{ status: "success", data: [...] }` |
+| DELETE | `/todos` | 清除全部 | 無 | `{ status: "success", data: [] }` |
+
+---
+
+## 🚀 快速開始
+
+### 前置要求
+- **Node.js** v24.x（推薦）或更高版本
+- 任何現代瀏覽器（Chrome, Firefox, Edge 等）
+
+### 安裝與運行
+
+#### 1️⃣ 安裝後端依賴
+```powershell
+cd c:\Users\明欣\Desktop\project_todolist\todolist_backend
+npm install
+```
+
+#### 2️⃣ 啟動後端伺服器
+```powershell
+node server.js
+```
+✅ 伺服器監聽 `http://localhost:3005`（無輸出，這是正常的）
+
+#### 3️⃣ 啟動前端
+
+**選項 A：使用 http-server**
+```powershell
+cd c:\Users\明欣\Desktop\project_todolist\todolist_frontend
+npx http-server -p 8080
+# 然後在瀏覽器開啟: http://localhost:8080
+```
+
+**選項 B：直接開啟檔案（Quick Test）**
+- 雙擊 `todolist_frontend/index.html`（可能遇到跨域警告）
+
+**選項 C：直接點選 Go Live (Click to run live server)**
+
+
+#### 4️⃣ 測試 API（Postman）
+**取得所有待辦**
+-Uri 'http://localhost:3005/todos'
+-Method GET
+
+**新增待辦**
+-Uri 'http://localhost:3005/todos'
+-Method POST 
+
+**刪除全部**
+-Uri 'http://localhost:3005/todos'
+-Method DELETE
+
+---
+
+## 📁 檔案說明
+
+### 後端檔案
+
+**`server.js`**
+- 純 Node.js HTTP 伺服器（無框架）
+- 在記憶體中儲存待辦（重啟後遺失）
+- 已啟用 CORS（允許跨域請求）
+- 監聽連接埠：`process.env.PORT || 3005`
+
+**`errorHandle.js`**
+- 統一錯誤回應處理
+- 回傳 400 狀態碼與錯誤資訊 JSON
+
+**`package.json`**
+- dependencies：`uuid` (用於產生唯一 ID)
+- scripts: `npm start` → `node server.js`
+
+---
+
+### 前端檔案
+
+**`index.html`**
+- 頁面骨架與 DOM 容器
+- ID（用於 JS 選取）：
+  - `#todoForm` - 輸入表單
+  - `#todoInput` - 輸入框
+  - `#addBtn` - 新增按鈕
+  - `#clearBtn` - 清除全部按鈕
+  - `#status` - 狀態資訊顯示區
+  - `#todosList` - 待辦清單容器
+
+**`all.js`（核心邏輯）**
+- `baseUrl = 'http://localhost:3005/todos'` - 後端地址（需要時可修改）
+- 關鍵函數：
+  - `fetchTodos()` - GET 請求，取得待辦
+  - `addTodo(title)` - POST 請求，新增
+  - `editTodo(id, title)` - PATCH 請求，編輯
+  - `deleteTodo(id)` - DELETE 請求，刪除單項
+  - `clearAll()` - DELETE 請求，清空全部
+  - `renderTodos(todos)` - 渲染 DOM 清單
+  - `setStatus(msg)` - 顯示狀態資訊
+
+**`style.css`**
+- 簡單 CSS Grid/Flexbox 佈局
+- 按鈕與清單樣式
+
+---
+
+## ⚙️ 技術堆疊 (tech stack)
+
+- **後端**：Node.js (無框架)
+- **前端**：原生 HTML5, CSS3, JavaScript (ES6+)
+- **通訊**：Fetch API, JSON
+- **其他**：UUID (for ID generation)
+
+---
+
+## 🔍 常見問題
+
+### Q: 後端啟動後為什麼沒有輸出？
+**A:** Node.js 原生 `http` 模組啟動成功時不輸出任何資訊。透過發送 API 請求測試即可確認運行狀態。
+
+### Q: 前端顯示「無法連接到後端」怎麼辦？
+**A:**
+1. 確認後端已啟動：`node server.js` 在 `todolist_backend` 目錄運行
+2. 查看瀏覽器 Console（F12）檢查錯誤資訊
+3. 確認前端 JS 中的 `baseUrl` 是否正確指向後端地址（例如 `http://localhost:3005/todos`）
+4. 若用 `file://` 開啟前端，推薦改用 `http-server` 或 Python 伺服器
+
+### Q: 待辦資料在瀏覽器重新整理後消失，為什麼？
+**A:** MVP 版本中，資料只儲存在後端記憶體中（運行時`todos` 陣列）。若要持久化，需要連接資料庫。
+
+### Q: 如何修改後端連接埠？
+**A:** 在啟動前設定環境變數：
+```powershell
+$env:PORT=4000; node server.js
+```
+然後前端 `all.js` 中的 `baseUrl` 也要相應修改。
+
+---
+
+## 🎁 未來可擴展功能
+
+### 1. **前端架構改良 (不使用 ID 選擇器)**
+   - 將原本透過 `id` 取元素改為使用 `class` 或 `data-*` 屬性
+   - 方便後續元件化、框架導入、重複使用同一樣式/邏輯
+   - 可搭配 `querySelectorAll`、`querySelector` 或事件實作
+
+### 2. **使用者認證系統**
+   - 新增登入/註冊功能
+   - 後端實作 JWT (JSON Web Token) 或 Session
+   - 每個使用者擁有自己的待辦清單
+   - 修改 DB schema：`todos` table 增加 `userId` 外鍵
+
+### 2. **資料持久化**
+   - 從記憶體遷移到資料庫
+   - 建議選項：
+     - **SQLite** - 輕量、無需另外配置 DB 伺服器
+     - **PostgreSQL** - 生產級別
+     - **MongoDB** - NoSQL 靈活性
+   - 使用 ORM：`Sequelize` (SQL) 或 `Mongoose` (MongoDB)
+
+### 3. **任務優先順序與分類**
+   - 為每個待辦新增 `priority` (高/中/低)、`category`、`dueDate` 欄位
+   - 前端顯示與過濾功能
+
+### 4. **任務完成狀態**
+   - 新增 `completed` 布林欄位
+   - 前端上的勾選框切換狀態
+   - API 支援 PATCH `/todos/:id` 更新狀態
+
+### 5. **搜尋與篩選**
+   - 後端支援查詢參數：`GET /todos?search=關鍵字&category=工作`
+   - 前端搜尋框與過濾器
+
+### 6. **待辦統計與資料視覺化**
+   - 顯示「已完成」、「未完成」計數
+   - 按分類統計
+   - 簡單圖表（使用 Chart.js 等）
+
+### 7. **後端框架升級**
+   - 從原生 `http` 遷移到 **Express.js** 或 **Fastify**
+   - 簡化路由、中間件管理
+   - 更好的錯誤處理與日誌
+
+### 8. **前端框架升級**
+   - 遷移到 **React** / **Vue.js** / **Svelte**
+   - 元件化架構
+   - 更容易的狀態管理
+
+### 9. **即時更新**
+   - 使用 WebSocket（Socket.io）實作多使用者即時同步
+
+### 10. **匯出與分享**
+   - 將待辦匯出為 PDF / CSV
+   - 分享清單連結給其他使用者
+
+### 11. **行動端適配**
+   - 完善響應式設計
+   - 考慮開發 React Native / Flutter 行動應用
+
+### 12. **測試覆蓋**
+   - 後端：Jest / Mocha 單元測試
+   - 前端：Jest / Cypress E2E 測試
+   - CI/CD 流程（GitHub Actions）
+
+---
+
+## 📝 部署建議
+
+### 本地開發
+- 後端：`node server.js`（或 nodemon 自動重啟）
+- 前端：`npx http-server` 或開發工具（Vite, Webpack）
+
+### 生產部署
+- **後端**：Heroku / Railway / Vercel (Node)
+  - 需要連接遠端資料庫
+  - 使用環境變數管理敏感資訊
+- **前端**：Netlify / Vercel / GitHub Pages
+  - 修改前端中的 `baseUrl` 指向生產後端 URL
+  - 配置 CORS 確保跨域存取
+
+---
+
+
+**最後更新**：2026 年 3 月  
+**版本**：1.0.0 (MVP)

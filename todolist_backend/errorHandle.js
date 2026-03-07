@@ -14,5 +14,5 @@ function errHandle(res) {
     res.end();
 }
 
-// 因為 Node.js 的檔案是「各自獨立的模組」，需主動匯出（export）在 errorHandle.js 裡面宣告的東西，即將 errHandle 這個函式對外公開，讓其他檔案可取用
+// 因為 Node.js 的檔案是「各自獨立的模組」，需主動匯出（export）在 errorHandle.js 裡面宣告的東西，即導出 errHandle 這個函式對外公開，讓其他檔案可取用
 module.exports = errHandle; 

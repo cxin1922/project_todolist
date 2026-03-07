@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ariel Todolist</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Ariel Todolist</h1>
+
+        <form id="todoForm">
+            <input type="text" id="todoInput" placeholder="請輸入待辦事項" autocomplete="off">
+            <button type="submit" id="addBtn">新增</button>
+            <button type="button" id="clearBtn">清除全部</button>
+        </form>
+
+        <div id="status" aria-live="polite"></div> 
+        <!-- 用於顯示操作狀態的區域，設置aria-live屬性以便無障礙訪問 -->
+
+        <ul id="todosList"></ul>
+        <!-- 展示每項待辦清單的地方 -->
+    </div>
+
+    <script src="all.js"></script>
+
+</body>
+
+</html>
