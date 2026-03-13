@@ -1,7 +1,44 @@
 const http = require('http');
 const { v4: uuidv4 } = require('uuid');
+const { google } = require('googleapis');
+require('dotenv').config(); // 載入環境變數
 const errHandle = require('./errorHandle');
 const todos = [];
+
+// Google Sheets 設定
+const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+if (!SHEET_ID) {
+    throw new Error('GOOGLE_SHEET_ID 環境變數未設定');
+}
+const auth = new google.auth.GoogleAuth({ // GoogleAuth 由 googleapis 提供
+    credentials: { // 放置從金鑰中提取出的資訊，用來驗證應用程式的身份
+        type: process.env.GOOGLE_SA_TYPE,
+        project_id: process.env.GOOGLE_SA_PROJECT_ID,
+        private_key_id: process.env.GOOGLE_SA_PRIVATE_KEY_ID,
+        private_key: process.env.GOOGLE_SA_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.GOOGLE_SA_CLIENT_EMAIL,
+        client_id: process.env.GOOGLE_SA_CLIENT_ID,
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'], // 設定授權範圍，允許對 Google Sheets 進行讀寫操作
+});
+const sheets = google.sheets({ version: 'v4', auth }); // 使用 google.sheets 函式創建一個 Google Sheets API 的客戶端，指定版本為 v4，並傳入前面創建的 auth 物件來進行身份驗證
+
+// 將資料新增到 Google Sheets
+async function appendToSheet(id, title) {
+    try {
+        const values = [[id, title]]; // 以二維陣列格式準備資料，符合 Google Sheets API 的要求
+        await sheets.spreadsheets.values.append({
+            spreadsheetId: SHEET_ID,
+            range: '工作表1!A:B', // 欄位 A: id, B: title
+            valueInputOption: 'RAW', // 以原始格式寫入，不進行解析
+            resource: { values }, // 將資料包裝在 resource 物件中，values 作為要寫入的資料
+        });
+        console.log('成功寫入 Google Sheets');
+    } catch (error) {
+        console.error('寫入 Google Sheets 失敗:', error.message);
+        // 不影響主要功能，只記錄錯誤
+    }
+}
 
 // 監聽：要去接收下面函式的資料
 const requestListener = (req, res) => { //去接請求和回應
@@ -38,6 +75,10 @@ const requestListener = (req, res) => { //去接請求和回應
                         "id": uuidv4(),
                     }
                     todos.push(todo); // 把 todo 物件放進 todos 陣列裡面；在此是記在記憶體上
+                    
+                    // 寫入到 Google Sheets（非同步，不阻塞主要功能）
+                    appendToSheet(todo.id, todo.title);
+                    
                     res.writeHead(200, headers);
                     res.write(JSON.stringify({
                         "status": "success",
