@@ -2,9 +2,9 @@
 
 一個前後端分離的待辦事項管理網頁（MVP），展示基礎的 REST API 與前端互動。
 
-後端為跟隨線上課程實作，並於 Notion 撰寫學習筆記；前端透過 GitHub Copilot Chat 協作。此份專案以學習為目的。
+後端為跟隨線上課程實作，並於 Notion 撰寫學習筆記；前端透過 GitHub Copilot & Chat 完成。此份專案以觀念及基礎實作學習為目的。
 
-## 📋 專案結構
+## 專案結構
 
 ```
 project_todolist/
@@ -25,15 +25,18 @@ project_todolist/
 
 ---
 
-## 🎯 目前功能（MVP）
+## 目前功能（MVP）
 
 ### 前端功能
-- ✅ **查看待辦清單** - 頁面載入時從後端取得所有待辦事項
-- ✅ **新增待辦** - 輸入標題後點擊「新增」按鈕發送 POST 請求
-- ✅ **編輯待辦** - 點擊每項的「編輯」按鈕彈窗修改標題（PATCH 請求）
-- ✅ **刪除單項** - 點擊「刪除」按鈕移除指定待辦（DELETE 請求）
-- ✅ **清除全部** - 點擊「清除全部」按鈕清空所有待辦（DELETE 請求）
-- ✅ **即時回饋** - 操作完成後顯示成功/失敗狀態
+- **查看待辦清單** - 頁面載入時從後端取得所有待辦事項
+- **新增待辦** - 輸入標題後點擊「新增」按鈕發送 POST 請求
+- **編輯待辦** - 點擊每項的「編輯」按鈕彈窗修改標題（PATCH 請求）
+- **刪除單項** - 點擊「刪除」按鈕移除指定待辦（DELETE 請求）
+- **清除全部** - 點擊「清除全部」按鈕清空所有待辦（DELETE 請求）
+- **即時回饋** - 操作完成後顯示成功/失敗狀態
+
+### 本次調整的功能與技術
+- **DOM 選擇器優化** - 將原本的 `getElementById` 改為 `querySelector` 使用 class 選擇器
 
 ### 後端 API 端點
 所有端點基於 `http://localhost:3005`（本地）
@@ -46,9 +49,21 @@ project_todolist/
 | DELETE | `/todos/:id` | 刪除單項 | 無 | `{ status: "success", data: [...] }` |
 | DELETE | `/todos` | 清除全部 | 無 | `{ status: "success", data: [] }` |
 
+### 本次調整的功能與技術
+- **DOM 選擇器優化** - 將原本的 `getElementById` 改為 `querySelector` 使用 class 選擇器
+
 ---
 
-## 🚀 快速開始
+## 技術堆疊 (tech stack)
+
+- **後端**：Node.js (無框架)
+- **前端**：原生 HTML5, CSS3, JavaScript (ES6+)
+- **通訊**：Fetch API, RESTful API, JSON
+- **其他**：UUID (for ID generation)
+
+---
+
+## 快速開始
 
 ### 前置要求
 - **Node.js** v24.x（推薦）或更高版本
@@ -66,7 +81,7 @@ npm install
 ```powershell
 node server.js
 ```
-✅ 伺服器監聽 `http://localhost:3005`（無輸出，這是正常的）
+伺服器監聽 `http://localhost:3005`
 
 #### 3️⃣ 啟動前端
 
@@ -98,7 +113,7 @@ npx http-server -p 8080
 
 ---
 
-## 📁 檔案說明
+## 檔案說明
 
 ### 後端檔案
 
@@ -122,17 +137,17 @@ npx http-server -p 8080
 
 **`index.html`**
 - 頁面骨架與 DOM 容器
-- ID（用於 JS 選取）：
-  - `#todoForm` - 輸入表單
-  - `#todoInput` - 輸入框
-  - `#addBtn` - 新增按鈕
-  - `#clearBtn` - 清除全部按鈕
-  - `#status` - 狀態資訊顯示區
-  - `#todosList` - 待辦清單容器
+- Class（用於 JS 選取）：
+  - `.todo-form` - 輸入表單
+  - `.todo-input` - 輸入框
+  - `.add-btn` - 新增按鈕
+  - `.clear-btn` - 清除全部按鈕
+  - `.status` - 狀態資訊顯示區
+  - `.todos-list` - 待辦清單容器
 
 **`all.js`（核心邏輯）**
 - `baseUrl = 'http://localhost:3005/todos'` - 後端地址（需要時可修改）
-- 關鍵函數：
+- 關鍵函式：
   - `fetchTodos()` - GET 請求，取得待辦
   - `addTodo(title)` - POST 請求，新增
   - `editTodo(id, title)` - PATCH 請求，編輯
@@ -147,16 +162,7 @@ npx http-server -p 8080
 
 ---
 
-## ⚙️ 技術堆疊 (tech stack)
-
-- **後端**：Node.js (無框架)
-- **前端**：原生 HTML5, CSS3, JavaScript (ES6+)
-- **通訊**：Fetch API, JSON
-- **其他**：UUID (for ID generation)
-
----
-
-## 🔍 常見問題
+## 常見問題
 
 ### Q: 後端啟動後為什麼沒有輸出？
 **A:** Node.js 原生 `http` 模組啟動成功時不輸出任何資訊。透過發送 API 請求測試即可確認運行狀態。
@@ -180,14 +186,9 @@ $env:PORT=4000; node server.js
 
 ---
 
-## 🎁 未來可擴展功能
+## 未來可擴展功能
 
-### 1. **前端架構改良 (不使用 ID 選擇器)**
-   - 將原本透過 `id` 取元素改為使用 `class` 或 `data-*` 屬性
-   - 方便後續元件化、框架導入、重複使用同一樣式/邏輯
-   - 可搭配 `querySelectorAll`、`querySelector` 或事件實作
-
-### 2. **使用者認證系統**
+### 1. **使用者認證系統**
    - 新增登入/註冊功能
    - 後端實作 JWT (JSON Web Token) 或 Session
    - 每個使用者擁有自己的待辦清單
@@ -201,7 +202,7 @@ $env:PORT=4000; node server.js
      - **MongoDB** - NoSQL 靈活性
    - 使用 ORM：`Sequelize` (SQL) 或 `Mongoose` (MongoDB)
 
-### 3. **任務優先順序與分類**
+### 3. **任務優先級與分類**
    - 為每個待辦新增 `priority` (高/中/低)、`category`、`dueDate` 欄位
    - 前端顯示與過濾功能
 
@@ -247,11 +248,11 @@ $env:PORT=4000; node server.js
 
 ---
 
-## 📝 部署建議
+## 部署建議
 
 ### 本地開發
 - 後端：`node server.js`（或 nodemon 自動重啟）
-- 前端：`npx http-server` 或開發工具（Vite, Webpack）
+- 前端：`npx http-server` 
 
 ### 生產部署
 - **後端**：Heroku / Railway / Vercel (Node)
@@ -264,5 +265,4 @@ $env:PORT=4000; node server.js
 ---
 
 
-**最後更新**：2026 年 3 月  
-**版本**：1.0.0 (MVP)
+**最後更新**：2026 年 3 月

@@ -1,11 +1,11 @@
 const baseUrl = 'http://localhost:3005/todos'; // 設定 API 的基本 URL，方便後續的 API 請求使用。若後端改 port 或部署到其他主機，需修改此處
 
-// 以下 getElementById 是用來抓取 HTML 中對應 id 的元素，並將其存儲在變數中，以便後續操作這些元素
-const todoForm = document.getElementById('todoForm');
-const todoInput = document.getElementById('todoInput');
-const todosList = document.getElementById('todosList');
-const statusEl = document.getElementById('status');
-const clearBtn = document.getElementById('clearBtn');
+// 以下 querySelector 是用來抓取 HTML 中對應 class 的元素，並將其存儲在變數中，以便後續操作這些元素
+const todoForm = document.querySelector('.todo-form');
+const todoInput = document.querySelector('.todo-input');
+const todosList = document.querySelector('.todos-list');
+const statusEl = document.querySelector('.status');
+const clearBtn = document.querySelector('.clear-btn');
 
 async function fetchTodos() { // 定義一個非同步函式來獲取待辦事項列表
     try {
