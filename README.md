@@ -71,7 +71,7 @@ project_todolist/
 
 #### 1️⃣ 安裝後端依賴
 ```powershell
-cd c:\Users\明欣\Desktop\project_todolist\todolist_backend
+cd c:\Users\使用者名稱\Desktop\project_todolist\todolist_backend
 npm install
 ```
 
@@ -85,9 +85,9 @@ node server.js
 
 **選項 A：使用 http-server**
 ```powershell
-cd c:\Users\明欣\Desktop\project_todolist\todolist_frontend
+cd c:\Users\使用者名稱\Desktop\project_todolist\todolist_frontend
 npx http-server -p 8080
-# 然後在瀏覽器開啟: http://localhost:8080
+# 瀏覽器開啟: http://localhost:8080
 ```
 
 **選項 B：直接開啟檔案（Quick Test）**
@@ -99,14 +99,17 @@ npx http-server -p 8080
 #### 4️⃣ 測試 API（Postman）
 **取得所有待辦**
 -Uri 'http://localhost:3005/todos'
+
 -Method GET
 
 **新增待辦**
 -Uri 'http://localhost:3005/todos'
+
 -Method POST 
 
 **刪除全部**
 -Uri 'http://localhost:3005/todos'
+
 -Method DELETE
 
 ---
@@ -169,7 +172,7 @@ npx http-server -p 8080
 請依照以下步驟操作：
 
 1. **進入 Google Cloud Console：**
-   前往 [console.cloud.google.com](https://console.cloud.google.com/) 並登入你的 Google 帳號。
+   前往 [console.cloud.google.com](https://console.cloud.google.com/) 並登入 Google 帳號。
 
 2. **建立新專案：**
    點擊左上角的專案選單 →「建立新專案」→ 取名為 `自己喜歡的名字` → 建立。
@@ -196,7 +199,7 @@ npx http-server -p 8080
    - 切換到 **「金鑰 (Keys)」** 分頁。
    - 點擊 **「新增金鑰」** → **「建立新金鑰」**。
    - 選擇 **JSON** → 點擊 **「建立」**。
-   - **電腦會自動下載一個 `.json` 檔案。最高機密鑰匙！請妥善保存，不要傳給任何人。**
+   - **電腦會自動下載一個 `.json` 檔案。最高機密鑰匙，妥善保存！**
 
 7. **設定 Google Sheet 權限（重要！）：**
    - 建立一個新的 Google Sheet。
@@ -208,26 +211,26 @@ npx http-server -p 8080
 ---
 
 ## 未來可擴展功能
-### 0. **Google Sheets 完整同步**
+### 1. **Google Sheets 完整同步**
    - 新增待辦時寫入 Google Sheets（已實作）
    - 編輯待辦時更新 Google Sheets 對應列的 title
    - 刪除待辦時從 Google Sheets 移除對應列
    - 清除全部時清空 Google Sheets 工作表
    - 使用 Sheets API 的 update/delete 方法，需追蹤行號或以 id 查找
 
-### 1. **管理員後台（ADMIN 帳密）**
+### 2. **管理員後台（ADMIN 帳密）**
    - 建立管理員帳號/密碼登入機制
    - 管理員可查看/管理所有使用者待辦（跨帳號）
    - 後端實作權限判斷（admin vs user）
    - 前端加入管理員登入頁面
 
-### 2. **使用者認證系統**
+### 3. **使用者認證系統**
    - 新增登入/註冊功能
    - 後端實作 JWT (JSON Web Token) 或 Session
    - 每個使用者擁有自己的待辦清單
    - 修改 DB schema：`todos` table 增加 `userId` 外鍵
 
-### 3. **資料持久化**
+### 4. **資料持久化**
    - 從記憶體遷移到資料庫
    - 建議選項：
      - **SQLite** - 輕量、無需另外配置 DB 伺服器
@@ -235,23 +238,18 @@ npx http-server -p 8080
      - **MongoDB** - NoSQL 靈活性
    - 使用 ORM：`Sequelize` (SQL) 或 `Mongoose` (MongoDB)
 
-### 4. **任務優先級與分類**
+### 5. **任務優先級與分類**
    - 為每個待辦新增 `priority` (高/中/低)、`category`、`dueDate` 欄位
    - 前端顯示與過濾功能
 
-### 5. **任務完成狀態**
+### 6. **任務完成狀態**
    - 新增 `completed` 布林欄位
    - 前端上的勾選框切換狀態
    - API 支援 PATCH `/todos/:id` 更新狀態
 
-### 6. **搜尋與篩選**
+### 7. **搜尋與篩選**
    - 後端支援查詢參數：`GET /todos?search=關鍵字&category=工作`
    - 前端搜尋框與過濾器
-
-### 7. **待辦統計與資料視覺化**
-   - 顯示「已完成」、「未完成」計數
-   - 按分類統計
-   - 簡單圖表（使用 Chart.js 等）
 
 ### 8. **後端框架升級**
    - 從原生 `http` 遷移到 **Express.js** 或 **Fastify**
@@ -263,18 +261,30 @@ npx http-server -p 8080
    - 元件化架構
    - 更容易的狀態管理
 
-### 10. **即時更新**
-   - 使用 WebSocket（Socket.io）實作多使用者即時同步
+### 10. **使用 Axios 進行 API 請求**
+   - 將前端 Fetch API 改為 **axios** 套件
+   - 安裝：`npm install axios`（前端專案）
+   - 優點：更簡潔的語法、內建請求/響應攔截器、更好的錯誤處理
+   - 統一配置 baseURL、timeout、headers 等
+   - 支援請求取消、並發請求等高級功能
 
-### 11. **匯出與分享**
+### 11. **Discord API 每日早報推送**
+   - 整合 Discord Webhook 或 Bot API
+   - 後端定時任務（每日早上特定時間）推送待辦清單摘要到 Discord 頻道
+   - 推送內容：總待辦數、未完成任務列表、優先級統計
+   - 需配置 Discord 伺服器、建立 Webhook 或 Bot Token
+   - 使用 `node-schedule` 或 `node-cron` 實作定時功能
+   - 環境變數配置：`DISCORD_WEBHOOK_URL` 或 `DISCORD_BOT_TOKEN`
+
+### 12. **匯出與分享**
    - 將待辦匯出為 PDF / CSV
    - 分享清單連結給其他使用者
 
-### 12. **行動端適配**
+### 13. **行動端適配**
    - 完善響應式設計
    - 考慮開發 React Native / Flutter 行動應用
 
-### 13. **測試覆蓋**
+### 14. **測試覆蓋**
    - 後端：Jest / Mocha 單元測試
    - 前端：Jest / Cypress E2E 測試
    - CI/CD 流程（GitHub Actions）
@@ -320,6 +330,5 @@ $env:PORT=4000; node server.js
   - 配置 CORS 確保跨域存取
 
 ---
-
 
 **最後更新**：2026 年 3 月
